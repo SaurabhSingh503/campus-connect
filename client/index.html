@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campus Connect - Your Campus Management Hub</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <i class="fas fa-graduation-cap"></i>
+                <span>Campus Connect</span>
+            </div>
+            <button class="mobile-menu-toggle" id="mobileMenuToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#home" class="nav-link active">Home</a></li>
+                <li><a href="#events" class="nav-link">Events</a></li>
+                <li><a href="#notices" class="nav-link">Notices</a></li>
+                <li><a href="#complaints" class="nav-link">Complaints</a></li>
+                <li><a href="#attendance" class="nav-link">Attendance</a></li>
+                <li><a href="#clubs" class="nav-link">Clubs</a></li>
+                <li><a href="#feedback" class="nav-link">Feedback</a></li>
+            </ul>
+            <div class="auth-buttons">
+                <button class="btn-login" id="loginBtn">Login</button>
+                <button class="btn-signup" id="signupBtn">Sign Up</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero-section">
+        <div class="hero-content">
+            <h1 class="hero-title">Welcome to <span class="highlight">Campus Connect</span></h1>
+            <p class="hero-subtitle">Your all-in-one platform for efficient campus management</p>
+            <div class="hero-stats">
+                <div class="stat-card">
+                    <i class="fas fa-calendar-check"></i>
+                    <h3 id="totalEvents">0</h3>
+                    <p>Active Events</p>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-bell"></i>
+                    <h3 id="totalNotices">0</h3>
+                    <p>Recent Notices</p>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-users"></i>
+                    <h3 id="totalClubs">0</h3>
+                    <p>Active Clubs</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Events Section -->
+    <section id="events" class="section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Campus Events</h2>
+                <button class="btn-primary" id="addEventBtn">
+                    <i class="fas fa-plus"></i> Add Event
+                </button>
+            </div>
+            <div class="filter-bar">
+                <input type="text" id="eventSearch" placeholder="Search events..." class="search-input">
+                <select id="eventCategory" class="filter-select">
+                    <option value="all">All Categories</option>
+                    <option value="academic">Academic</option>
+                    <option value="cultural">Cultural</option>
+                    <option value="sports">Sports</option>
+                    <option value="technical">Technical</option>
+                    <option value="social">Social</option>
+                </select>
+            </div>
+            <div id="eventsGrid" class="events-grid"></div>
+        </div>
+    </section>
+
+    <!-- Notices Section -->
+    <section id="notices" class="section section-alt">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Notice Board</h2>
+                <button class="btn-primary" id="addNoticeBtn">
+                    <i class="fas fa-plus"></i> Add Notice
+                </button>
+            </div>
+            <div class="filter-bar">
+                <input type="text" id="noticeSearch" placeholder="Search notices..." class="search-input">
+                <select id="noticePriority" class="filter-select">
+                    <option value="all">All Priorities</option>
+                    <option value="urgent">Urgent</option>
+                    <option value="high">High</option>
+                    <option value="normal">Normal</option>
+                </select>
+            </div>
+            <div id="noticesGrid" class="notices-grid"></div>
+        </div>
+    </section>
+
+    <!-- Complaints Section -->
+    <section id="complaints" class="section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Complaint Management</h2>
+                <button class="btn-primary" id="addComplaintBtn">
+                    <i class="fas fa-plus"></i> Submit Complaint
+                </button>
+            </div>
+            <div class="complaints-stats">
+                <div class="complaint-stat">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <div>
+                        <h3 id="pendingComplaints">0</h3>
+                        <p>Pending</p>
+                    </div>
+                </div>
+                <div class="complaint-stat">
+                    <i class="fas fa-clock"></i>
+                    <div>
+                        <h3 id="inProgressComplaints">0</h3>
+                        <p>In Progress</p>
+                    </div>
+                </div>
+                <div class="complaint-stat">
+                    <i class="fas fa-check-circle"></i>
+                    <div>
+                        <h3 id="resolvedComplaints">0</h3>
+                        <p>Resolved</p>
+                    </div>
+                </div>
+            </div>
+            <div id="complaintsGrid" class="complaints-grid"></div>
+        </div>
+    </section>
+
+    <!-- Attendance Section -->
+    <section id="attendance" class="section section-alt">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Attendance Tracker</h2>
+                <button class="btn-primary" id="markAttendanceBtn">
+                    <i class="fas fa-plus"></i> Mark Attendance
+                </button>
+            </div>
+            <div class="attendance-overview">
+                <div class="attendance-card">
+                    <h3>Today's Attendance</h3>
+                    <div class="progress-circle" data-progress="0">
+                        <span class="progress-value">0%</span>
+                    </div>
+                </div>
+                <div class="attendance-card">
+                    <h3>Weekly Average</h3>
+                    <div class="progress-circle" data-progress="0">
+                        <span class="progress-value">0%</span>
+                    </div>
+                </div>
+                <div class="attendance-card">
+                    <h3>Monthly Average</h3>
+                    <div class="progress-circle" data-progress="0">
+                        <span class="progress-value">0%</span>
+                    </div>
+                </div>
+            </div>
+            <div id="attendanceGrid" class="attendance-grid"></div>
+        </div>
+    </section>
+
+    <!-- Clubs Section -->
+    <section id="clubs" class="section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Student Clubs & Projects</h2>
+                <button class="btn-primary" id="addClubBtn">
+                    <i class="fas fa-plus"></i> Create Club
+                </button>
+            </div>
+            <div class="filter-bar">
+                <input type="text" id="clubSearch" placeholder="Search clubs..." class="search-input">
+                <select id="clubCategory" class="filter-select">
+                    <option value="all">All Categories</option>
+                    <option value="technical">Technical</option>
+                    <option value="cultural">Cultural</option>
+                    <option value="sports">Sports</option>
+                    <option value="academic">Academic</option>
+                </select>
+            </div>
+            <div id="clubsGrid" class="clubs-grid"></div>
+        </div>
+    </section>
+
+    <!-- Feedback Section -->
+    <section id="feedback" class="section section-alt">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Feedback & Suggestions</h2>
+                <button class="btn-primary" id="addFeedbackBtn">
+                    <i class="fas fa-plus"></i> Submit Feedback
+                </button>
+            </div>
+            <div class="feedback-stats">
+                <div class="feedback-stat">
+                    <i class="fas fa-star"></i>
+                    <div>
+                        <h3>4.5</h3>
+                        <p>Average Rating</p>
+                    </div>
+                </div>
+                <div class="feedback-stat">
+                    <i class="fas fa-comments"></i>
+                    <div>
+                        <h3 id="totalFeedback">0</h3>
+                        <p>Total Feedback</p>
+                    </div>
+                </div>
+            </div>
+            <div id="feedbackGrid" class="feedback-grid"></div>
+        </div>
+    </section>
+
+    <!-- Modal Container -->
+    <div id="modalContainer" class="modal-container"></div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Campus Connect</h3>
+                <p>Making campus life easier, one click at a time.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#events">Events</a></li>
+                    <li><a href="#notices">Notices</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Contact</h3>
+                <p><i class="fas fa-envelope"></i> info@campusconnect.edu</p>
+                <p><i class="fas fa-phone"></i> +1 234 567 890</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 Campus Connect. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/utils.js"></script>
+    <script src="js/api.js"></script>
+    <script src="data/storage.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/events.js"></script>
+    <script src="js/notices.js"></script>
+    <script src="js/complaints.js"></script>
+    <script src="js/attendance.js"></script>
+    <script src="js/clubs.js"></script>
+    <script src="js/feedback.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
