@@ -1,9 +1,10 @@
-// ===== Authentication Module =====
+// ===== Authentication Module (LocalStorage Version - Works Immediately!) =====
 
 const Auth = {
     currentUser: null,
 
     init() {
+        console.log('Auth module initializing...');
         this.loadCurrentUser();
         this.setupEventListeners();
     },
@@ -35,7 +36,7 @@ const Auth = {
                 </button>
             </div>
             <div class="modal-body">
-                <form id="loginForm" onsubmit="return false;">
+                <form id="loginForm">
                     <div class="form-group">
                         <label class="form-label">Email</label>
                         <input type="email" class="form-input" name="email" required>
@@ -57,7 +58,6 @@ const Auth = {
         container.appendChild(modal);
         container.classList.add('active');
 
-        // Add event listeners
         modal.querySelector('.modal-close').addEventListener('click', () => this.closeModal());
         modal.querySelector('#cancelLoginBtn').addEventListener('click', () => this.closeModal());
         modal.querySelector('#submitLoginBtn').addEventListener('click', () => this.handleLogin());
@@ -74,7 +74,7 @@ const Auth = {
                 </button>
             </div>
             <div class="modal-body">
-                <form id="signupForm" onsubmit="return false;">
+                <form id="signupForm">
                     <div class="form-group">
                         <label class="form-label">Full Name</label>
                         <input type="text" class="form-input" name="name" required>
@@ -108,7 +108,6 @@ const Auth = {
         container.appendChild(modal);
         container.classList.add('active');
 
-        // Add event listeners
         modal.querySelector('.modal-close').addEventListener('click', () => this.closeModal());
         modal.querySelector('#cancelSignupBtn').addEventListener('click', () => this.closeModal());
         modal.querySelector('#submitSignupBtn').addEventListener('click', () => this.handleSignup());
@@ -117,50 +116,32 @@ const Auth = {
     closeModal() {
         const container = document.getElementById('modalContainer');
         container.classList.remove('active');
-        setTimeout(() => {
-            container.innerHTML = '';
-        }, 300);
+        setTimeout(() => container.innerHTML = '', 300);
     },
 
-    async handleLogin() {
+    handleLogin() {
         const form = document.getElementById('loginForm');
         const formData = new FormData(form);
         
         const email = formData.get('email');
         const password = formData.get('password');
 
-        if (!email || !password) {
-            Utils.showToast('Please fill in all fields', 'error');
-            return;
-        }
-        
-        try {
-            const result = await API.auth.login({ email, password });
+        // Get stored users
+        const users = JSON.parse(localStorage.getItem('users') || '[]');
+        const user = users.find(u => u.email === email && u.password === password);
 
-            API.setToken(result.token);
-            this.currentUser = result.user;
-            localStorage.setItem('currentUser', JSON.stringify(result.user));
+        if (user) {
+            this.currentUser = { name: user.name, email: user.email, role: user.role };
+            localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
             this.updateUIForLoggedInUser();
-            
             this.closeModal();
             Utils.showToast('Login successful!', 'success');
-            
-            // Refresh all modules
-            setTimeout(() => {
-                Events.loadEvents();
-                Notices.loadNotices();
-                Complaints.loadComplaints();
-                Attendance.loadAttendance();
-                Clubs.loadClubs();
-                Feedback.loadFeedback();
-            }, 500);
-        } catch (error) {
-            console.error('Login error:', error);
-            Utils.showToast(error.message || 'Login failed', 'error');
+        } else {
+            Utils.showToast('Invalid email or password', 'error');
         }
     },
 
-    async handleSignup() {
+    handleSignup() {
         const form = document.getElementById('signupForm');
         const formData = new FormData(form);
         
@@ -173,31 +154,28 @@ const Auth = {
             Utils.showToast('Please fill in all fields', 'error');
             return;
         }
-        
-        try {
-            const result = await API.auth.signup({ name, email, password, role });
 
-            API.setToken(result.token);
-            this.currentUser = result.user;
-            localStorage.setItem('currentUser', JSON.stringify(result.user));
-            this.updateUIForLoggedInUser();
-            
-            this.closeModal();
-            Utils.showToast('Account created successfully!', 'success');
-            
-            // Refresh all modules
-            setTimeout(() => {
-                Events.loadEvents();
-                Notices.loadNotices();
-                Complaints.loadComplaints();
-                Attendance.loadAttendance();
-                Clubs.loadClubs();
-                Feedback.loadFeedback();
-            }, 500);
-        } catch (error) {
-            console.error('Signup error:', error);
-            Utils.showToast(error.message || 'Signup failed', 'error');
+        // Get existing users
+        const users = JSON.parse(localStorage.getItem('users') || '[]');
+        
+        // Check if email already exists
+        if (users.find(u => u.email === email)) {
+            Utils.showToast('Email already registered', 'error');
+            return;
         }
+
+        // Add new user
+        const newUser = { name, email, password, role };
+        users.push(newUser);
+        localStorage.setItem('users', JSON.stringify(users));
+
+        // Auto login
+        this.currentUser = { name, email, role };
+        localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
+        this.updateUIForLoggedInUser();
+        
+        this.closeModal();
+        Utils.showToast('Account created successfully!', 'success');
     },
 
     updateUIForLoggedInUser() {
@@ -210,7 +188,6 @@ const Auth = {
                 </div>
             `;
             
-            // Add logout event listener
             const logoutBtn = document.getElementById('logoutBtn');
             if (logoutBtn) {
                 logoutBtn.addEventListener('click', () => this.logout());
@@ -219,12 +196,9 @@ const Auth = {
     },
 
     logout() {
-        if (confirm('Are you sure you want to logout?')) {
-            localStorage.removeItem('currentUser');
-            API.clearToken();
-            this.currentUser = null;
-            Utils.showToast('Logged out successfully', 'success');
-            setTimeout(() => window.location.reload(), 1000);
-        }
+        localStorage.removeItem('currentUser');
+        this.currentUser = null;
+        Utils.showToast('Logged out successfully', 'success');
+        setTimeout(() => window.location.reload(), 1000);
     }
 };
